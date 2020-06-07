@@ -54,11 +54,47 @@
  * http://www.thingiverse.com/thing:298812
  */
 //===========================================================================
-//============================= Sapphire Pro/Plus Preset ====================
+//========================Sapphire Pro/Plus/Bluer Preset ====================
 //===========================================================================
 
 #define SAPPHIRE_PRO
 //#define SAPPHIRE_PLUS
+//#define BLUER
+
+//===========================================================================
+//============================== Driver Select ==============================
+//===========================================================================
+
+//#define SAPPHIRE_PRO_STOCK // Select this if you haven't replaced Motor Drivers
+//#define SAPPHIRE_PLUS_STOCK // Select this if you haven't replaced Motor Drivers
+//#define BLUER_STOCK   // tmc2208x and y, a4988 z and e0
+#define MOD_1  //(TMC2208 on x,y and e0. a4988 on z)
+//#define MOD_2  //(TMC2208 on x,y,z and e0)
+//#define MOD_3  //(TMC2209 on x,y,z and e0)
+
+//If you don't have any of the drivers above. Edit below with your steps//
+
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 1600, 400 }
+
+//===========================================================================
+//=============================== Probe Select== ============================
+//===========================================================================
+
+#define BLTOUCH_MOD
+
+//Adjust Probe Offset Below.//
+// See https://marlinfw.org/docs/configuration/probes.html
+#define NOZZLE_TO_PROBE_OFFSET { 0, -40, 0 }
+
+//===========================================================================
+//=============================== Bed Leveling ==============================
+//===========================================================================
+
+//#define ABL   // 3 Point
+#define ABL_LINEAR
+//#define ABL_BILINEAR
+//#define UBL
+//#define MESH
 
 //===========================================================================
 //============================= Display Color Section========================
@@ -77,7 +113,7 @@
 //#define SAPPHIRE_GRAPHICAL_TFT_WB
 
 // White, Black and Colored Buttons
-//#define SAPPHIRE_GRAPHICAL_TFT_WBC
+#define SAPPHIRE_GRAPHICAL_TFT_WBC
 
 
 // Choose your own colors:
@@ -109,7 +145,7 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(le3tspeak, MKS Robin Nano)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "(Greg Newton, Repli3D)" // Who made the changes.
 #define CUSTOM_VERSION_FILE Version.h 
 
 /**
@@ -161,10 +197,13 @@
  */
   #if ENABLED(SAPPHIRE_PRO)
     //Sapphire Pro
-    #define BAUDRATE 115200 
+    #define BAUDRATE 250000 
   #elif ENABLED(SAPPHIRE_PLUS)
     //Sapphire Plus
-    #define BAUDRATE 115200    
+    #define BAUDRATE 250000
+  #elif ENABLED(BLUER)
+    //Sapphire Plus
+    #define BAUDRATE 250000         
   #else
     //No Preset
     #define BAUDRATE 250000
@@ -186,6 +225,9 @@
   #elif ENABLED(SAPPHIRE_PLUS)
     //Sapphire Plus
     #define CUSTOM_MACHINE_NAME "Sapphire Plus"
+  #elif ENABLED(BLUER)
+    //Bluer
+    #define CUSTOM_MACHINE_NAME "Bluer"
   #else
     //#define CUSTOM_MACHINE_NAME "3D Printer"
   #endif
@@ -555,6 +597,11 @@
     #define DEFAULT_Kp 15.30
     #define DEFAULT_Ki 0.85
     #define DEFAULT_Kd 56.55
+  #elif ENABLED(BLUER)
+    //Sapphire Plus
+    #define DEFAULT_Kp 8.41
+    #define DEFAULT_Ki 0.41
+    #define DEFAULT_Kd 43.21
   #else
     //No Preset
     #define DEFAULT_Kp 22.2
@@ -610,6 +657,11 @@
     #define DEFAULT_bedKp 45.0
     #define DEFAULT_bedKi 7.9
     #define DEFAULT_bedKd 150
+  #elif ENABLED(BLUER)
+    //Sapphire Plus
+    #define DEFAULT_bedKp 10.00
+    #define DEFAULT_bedKi 0.023
+    #define DEFAULT_bedKd 305.4
   #else
     //No Preset
     //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
@@ -654,7 +706,7 @@
  * Note: For Bowden Extruders make this large enough to allow load/unload.
  */
 #define PREVENT_LENGTHY_EXTRUDE
-#define EXTRUDE_MAXLENGTH 750
+#define EXTRUDE_MAXLENGTH 650
 
 //===========================================================================
 //======================== Thermal Runaway Protection =======================
@@ -717,12 +769,21 @@
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
 
 #if ANY(SAPPHIRE_PRO, SAPPHIRE_PLUS)
-    //Sapphire Pro & Plus
+    //Sapphire Pro, Plus & Bluer
     #define USE_XMIN_PLUG
     //#define USE_YMIN_PLUG
     #define USE_ZMIN_PLUG
     //#define USE_XMAX_PLUG
     #define USE_YMAX_PLUG
+    //#define USE_ZMAX_PLUG
+
+  #elif ENABLED(BLUER)
+    //Bluer
+    #define USE_XMIN_PLUG
+    #define USE_YMIN_PLUG
+    #define USE_ZMIN_PLUG
+    //#define USE_XMAX_PLUG
+    //#define USE_YMAX_PLUG
     //#define USE_ZMAX_PLUG
 
   #else
@@ -774,6 +835,15 @@
     #define Y_MAX_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
     #define Z_MAX_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
     #define Z_MIN_PROBE_ENDSTOP_INVERTING true // Set to true to invert the logic of the probe.
+  #elif ENABLED(BLUER)
+    //Sapphire Pro & Plus
+    #define X_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
+    #define Y_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
+    #define Z_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
+    #define X_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+    #define Y_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+    #define Z_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+    #define Z_MIN_PROBE_ENDSTOP_INVERTING true // Set to true to invert the logic of the probe.
 
   #else
     //No Preset
@@ -804,7 +874,58 @@
  *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
  * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'L6470', 'L6474', 'POWERSTEP01', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
-#if ENABLED(SAPPHIRE_PRO)
+#if ENABLED(MOD_1)
+    #define X_DRIVER_TYPE  TMC2208_STANDALONE
+    #define Y_DRIVER_TYPE  TMC2208_STANDALONE
+    #define Z_DRIVER_TYPE  A4988
+    //#define X2_DRIVER_TYPE A4988
+    //#define Y2_DRIVER_TYPE A4988
+    //#define Z2_DRIVER_TYPE A4988
+    //#define Z3_DRIVER_TYPE A4988
+    //#define Z4_DRIVER_TYPE A4988
+    #define E0_DRIVER_TYPE TMC2208_STANDALONE
+    //#define E1_DRIVER_TYPE A4988
+    //#define E2_DRIVER_TYPE A4988
+    //#define E3_DRIVER_TYPE A4988
+    //#define E4_DRIVER_TYPE A4988
+    //#define E5_DRIVER_TYPE A4988
+    //#define E6_DRIVER_TYPE A4988
+    //#define E7_DRIVER_TYPE A4988
+  #elif ENABLED(MOD_2)
+    #define X_DRIVER_TYPE  TMC2208_STANDALONE
+    #define Y_DRIVER_TYPE  TMC2208_STANDALONE
+    #define Z_DRIVER_TYPE  TMC2208_STANDALONE
+    //#define X2_DRIVER_TYPE A4988
+    //#define Y2_DRIVER_TYPE A4988
+    //#define Z2_DRIVER_TYPE A4988
+    //#define Z3_DRIVER_TYPE A4988
+    //#define Z4_DRIVER_TYPE A4988
+    #define E0_DRIVER_TYPE TMC2208_STANDALONE
+    //#define E1_DRIVER_TYPE A4988
+    //#define E2_DRIVER_TYPE A4988
+    //#define E3_DRIVER_TYPE A4988
+    //#define E4_DRIVER_TYPE A4988
+    //#define E5_DRIVER_TYPE A4988
+    //#define E6_DRIVER_TYPE A4988
+    //#define E7_DRIVER_TYPE A4988
+  #elif ENABLED(MOD_3)
+    #define X_DRIVER_TYPE  TMC2209_STANDALONE
+    #define Y_DRIVER_TYPE  TMC2209_STANDALONE
+    #define Z_DRIVER_TYPE  TMC2209_STANDALONE
+    //#define X2_DRIVER_TYPE A4988
+    //#define Y2_DRIVER_TYPE A4988
+    //#define Z2_DRIVER_TYPE A4988
+    //#define Z3_DRIVER_TYPE A4988
+    //#define Z4_DRIVER_TYPE A4988
+    #define E0_DRIVER_TYPE TMC2209_STANDALONE
+    //#define E1_DRIVER_TYPE A4988
+    //#define E2_DRIVER_TYPE A4988
+    //#define E3_DRIVER_TYPE A4988
+    //#define E4_DRIVER_TYPE A4988
+    //#define E5_DRIVER_TYPE A4988
+    //#define E6_DRIVER_TYPE A4988
+    //#define E7_DRIVER_TYPE A4988
+  #elif ENABLED(SAPPHIRE_PRO_STOCK)
     //Sapphire Pro
     #define X_DRIVER_TYPE  TMC2208_STANDALONE
     #define Y_DRIVER_TYPE  TMC2208_STANDALONE
@@ -822,8 +943,7 @@
     //#define E5_DRIVER_TYPE A4988
     //#define E6_DRIVER_TYPE A4988
     //#define E7_DRIVER_TYPE A4988
-  #elif ENABLED(SAPPHIRE_PLUS)
-    //Sapphire Plus
+  #elif ENABLED(SAPPHIRE_PLUS_STOCK)
     #define X_DRIVER_TYPE  TMC2208_STANDALONE
     #define Y_DRIVER_TYPE  TMC2208_STANDALONE
     #define Z_DRIVER_TYPE  A4988
@@ -833,6 +953,24 @@
     //#define Z3_DRIVER_TYPE A4988
     //#define Z4_DRIVER_TYPE A4988
     #define E0_DRIVER_TYPE TMC2208_STANDALONE
+    //#define E1_DRIVER_TYPE A4988
+    //#define E2_DRIVER_TYPE A4988
+    //#define E3_DRIVER_TYPE A4988
+    //#define E4_DRIVER_TYPE A4988
+    //#define E5_DRIVER_TYPE A4988
+    //#define E6_DRIVER_TYPE A4988
+    //#define E7_DRIVER_TYPE A4988
+  #elif ENABLED(BLUER_STOCK)
+    //Sapphire Pro
+    #define X_DRIVER_TYPE  TMC2208_STANDALONE
+    #define Y_DRIVER_TYPE  TMC2208_STANDALONE
+    #define Z_DRIVER_TYPE  A4988
+    //#define X2_DRIVER_TYPE A4988
+    //#define Y2_DRIVER_TYPE A4988
+    //#define Z2_DRIVER_TYPE A4988
+    //#define Z3_DRIVER_TYPE A4988
+    //#define Z4_DRIVER_TYPE A4988
+    #define E0_DRIVER_TYPE A4988
     //#define E1_DRIVER_TYPE A4988
     //#define E2_DRIVER_TYPE A4988
     //#define E3_DRIVER_TYPE A4988
@@ -905,15 +1043,24 @@
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
 
-#if ENABLED(SAPPHIRE_PRO)
+#if ENABLED(SAPPHIRE_PRO_STOCK)
     //Sapphire Pro
     #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 1600, 415 }
-  #elif ENABLED(SAPPHIRE_PLUS)
+  #elif ENABLED(SAPPHIRE_PLUS_STOCK)
     //Sapphire Plus
     #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 415 }
-  #else
-    //No Preset
-    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 4000, 500 }
+  #elif ENABLED(BLUER_STOCK)
+    //Sapphire Plus
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80.6, 80.4, 400, 90 } 
+  #elif ENABLED(MOD_1)
+    //Sapphire Plus
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80.1, 80.1, 1600, 412.8 }
+  #elif ENABLED(MOD_2)
+    //Sapphire Plus
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 408, 408 } 
+  #elif ENABLED(MOD_3)
+    //Sapphire Plus
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 108.08, 105.96, 401.2, 417 }
   #endif
 
 
@@ -922,8 +1069,11 @@
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 10, 50 }
-
+#if ANY(SAPPHIRE_PRO, SAPPHIRE_PLUS)
+  #define DEFAULT_MAX_FEEDRATE          { 300, 300, 10, 50 }
+#elif ENABLED(BLUER)
+  #define DEFAULT_MAX_FEEDRATE    { 200, 200, 10, 25}
+#endif
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
   #define MAX_FEEDRATE_EDIT_VALUES    { 600, 600, 10, 50 } // ...or, set your own edit limits
@@ -935,8 +1085,11 @@
  * Override with M201
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 200, 20000}
-
+#if ANY(SAPPHIRE_PRO, SAPPHIRE_PLUS)
+  #define DEFAULT_MAX_ACCELERATION      { 1500, 1500, 100, 10000}
+#elif ENABLED(BLUER)
+  #define DEFAULT_MAX_ACCELERATION      { 500, 500, 100, 5000}
+#endif
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
   #define MAX_ACCEL_EDIT_VALUES       { 6000, 6000, 200, 20000 } // ...or, set your own edit limits
@@ -950,10 +1103,15 @@
  *   M204 R    Retract Acceleration
  *   M204 T    Travel Acceleration
  */
-#define DEFAULT_ACCELERATION          1000    // X, Y, Z and E acceleration for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  2000    // E acceleration for retracts
-#define DEFAULT_TRAVEL_ACCELERATION   1500    // X, Y, Z acceleration for travel (non printing) moves
-
+#if ANY(SAPPHIRE_PRO, SAPPHIRE_PLUS)
+  #define DEFAULT_ACCELERATION          1000    // X, Y, Z and E acceleration for printing moves
+  #define DEFAULT_RETRACT_ACCELERATION  2000    // E acceleration for retracts
+  #define DEFAULT_TRAVEL_ACCELERATION   1000    // X, Y, Z acceleration for travel (non printing) moves
+#elif ENABLED(BLUER)
+  #define DEFAULT_ACCELERATION          500    // X, Y, Z and E acceleration for printing moves
+  #define DEFAULT_RETRACT_ACCELERATION  500    // E acceleration for retracts
+  #define DEFAULT_TRAVEL_ACCELERATION   700    // X, Y, Z acceleration for travel (non printing) moves
+#endif
 /**
  * Default Jerk limits (mm/s)
  * Override with M205 X Y Z E
@@ -1046,10 +1204,18 @@
 /**
  * The "Manual Probe" provides a means to do "Auto" Bed Leveling without a probe.
  * Use G29 repeatedly, adjusting the Z height at each point with movement commands
- * or (with LCD_BED_LEVELING) the LCD controller.
- */
-#define PROBE_MANUALLY
-#define MANUAL_PROBE_START_Z 0.2
+ * or (with LCD_BED_LEVELING) the LCD controller. 
+ * 
+ */ 
+
+#if ENABLED(BLTOUCH_MOD)
+  //#define PROBE_MANUALLY
+  //#define MANUAL_PROBE_START_Z 0.2
+#else 
+  //No Preset
+    #define PROBE_MANUALLY
+    #define MANUAL_PROBE_START_Z 0.2
+#endif
 
 /**
  * A Fix-Mounted Probe either doesn't deploy or needs manual deployment.
@@ -1072,7 +1238,9 @@
 /**
  * The BLTouch probe uses a Hall effect sensor and emulates a servo.
  */
-//#define BLTOUCH
+#if ENABLED(BLTOUCH_MOD)
+  #define BLTOUCH
+#endif
 
 /**
  * Touch-MI Probe by hotends.fr
@@ -1144,14 +1312,18 @@
  *
  * Specify a Probe position as { X, Y, Z }
  */
-#define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0 }
+#define NOZZLE_TO_PROBE_OFFSET { 0, -40, 0 }
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
 #define MIN_PROBE_EDGE 10
 
 // X and Y axis travel speed (mm/m) between probes
-#define XY_PROBE_SPEED 10500
+#if ANY(SAPPHIRE_PRO, SAPPHIRE_PLUS)
+  #define XY_PROBE_SPEED 10500
+#elif ENABLED(BLUER)
+  #define XY_PROBE_SPEED 6000
+#endif
 
 // Feedrate (mm/m) for the first approach when double-probing (MULTIPLE_PROBING == 2)
 #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
@@ -1168,7 +1340,7 @@
  * A total of 2 does fast/slow probes with a weighted average.
  * A total of 3 or more adds more slow probes, taking the average.
  */
-//#define MULTIPLE_PROBING 2
+#define MULTIPLE_PROBING 3
 //#define EXTRA_PROBING    1
 
 /**
@@ -1243,7 +1415,7 @@
 
 // @section machine
 
-#if ENABLED(SAPPHIRE_PRO)
+#if ENABLED(SAPPHIRE_PRO_STOCK)
     //Sapphire Pro
     // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
     #define INVERT_X_DIR true
@@ -1261,7 +1433,7 @@
     #define INVERT_E5_DIR false
     #define INVERT_E6_DIR false
     #define INVERT_E7_DIR false
-  #elif ENABLED(SAPPHIRE_PLUS)
+  #elif ENABLED(SAPPHIRE_PLUS_STOCK)
     //Sapphire Plus
     // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
     #define INVERT_X_DIR true
@@ -1272,6 +1444,78 @@
 
     // For direct drive extruder v9 set to true, for geared extruder set to false.
     #define INVERT_E0_DIR true
+    #define INVERT_E1_DIR false
+    #define INVERT_E2_DIR false
+    #define INVERT_E3_DIR false
+    #define INVERT_E4_DIR false
+    #define INVERT_E5_DIR false
+    #define INVERT_E6_DIR false
+    #define INVERT_E7_DIR false
+  #elif ENABLED(BLUER_STOCK)
+    //Bluer
+    // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
+    #define INVERT_X_DIR true
+    #define INVERT_Y_DIR true
+    #define INVERT_Z_DIR false
+
+    // @section extruder
+
+    // For direct drive extruder v9 set to true, for geared extruder set to false.
+    #define INVERT_E0_DIR false
+    #define INVERT_E1_DIR false
+    #define INVERT_E2_DIR false
+    #define INVERT_E3_DIR false
+    #define INVERT_E4_DIR false
+    #define INVERT_E5_DIR false
+    #define INVERT_E6_DIR false
+    #define INVERT_E7_DIR false
+  #elif ENABLED(MOD_1)
+    //Sapphire Plus
+    // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
+    #define INVERT_X_DIR true
+    #define INVERT_Y_DIR true
+    #define INVERT_Z_DIR false
+
+    // @section extruder
+
+    // For direct drive extruder v9 set to true, for geared extruder set to false.
+    #define INVERT_E0_DIR true
+    #define INVERT_E1_DIR false
+    #define INVERT_E2_DIR false
+    #define INVERT_E3_DIR false
+    #define INVERT_E4_DIR false
+    #define INVERT_E5_DIR false
+    #define INVERT_E6_DIR false
+    #define INVERT_E7_DIR false
+  #elif ENABLED(MOD_2)
+    //Sapphire Plus
+    // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
+    #define INVERT_X_DIR true
+    #define INVERT_Y_DIR true
+    #define INVERT_Z_DIR true
+
+    // @section extruder
+
+    // For direct drive extruder v9 set to true, for geared extruder set to false.
+    #define INVERT_E0_DIR false
+    #define INVERT_E1_DIR false
+    #define INVERT_E2_DIR false
+    #define INVERT_E3_DIR false
+    #define INVERT_E4_DIR false
+    #define INVERT_E5_DIR false
+    #define INVERT_E6_DIR false
+    #define INVERT_E7_DIR false
+  #elif ENABLED(MOD_3)
+    //Sapphire Plus
+    // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
+    #define INVERT_X_DIR false
+    #define INVERT_Y_DIR false
+    #define INVERT_Z_DIR false
+
+    // @section extruder
+
+    // For direct drive extruder v9 set to true, for geared extruder set to false.
+    #define INVERT_E0_DIR false
     #define INVERT_E1_DIR false
     #define INVERT_E2_DIR false
     #define INVERT_E3_DIR false
@@ -1356,6 +1600,28 @@
     #define X_MAX_POS X_BED_SIZE
     #define Y_MAX_POS Y_BED_SIZE
     #define Z_MAX_POS 350
+  #elif ENABLED(BLUER)
+    //Sapphire Plus
+    //No Preset
+    // Direction of endstops when homing; 1=MAX, -1=MIN
+    // :[-1,1]
+    #define X_HOME_DIR -1
+    #define Y_HOME_DIR -1
+    #define Z_HOME_DIR -1
+
+    // @section machine
+
+    // The size of the print bed
+    #define X_BED_SIZE 230
+    #define Y_BED_SIZE 230
+
+    // Travel limits (mm) after homing, corresponding to endstop positions.
+    #define X_MIN_POS -5
+    #define Y_MIN_POS 0
+    #define Z_MIN_POS 0
+    #define X_MAX_POS X_BED_SIZE
+    #define Y_MAX_POS Y_BED_SIZE
+    #define Z_MAX_POS 280
   #else
     //No Preset
     // Direction of endstops when homing; 1=MAX, -1=MIN
@@ -1480,17 +1746,32 @@
  *   leveling in steps so you can manually adjust the Z height at each grid-point.
  *   With an LCD controller the process is guided step-by-step.
  */
-//#define AUTO_BED_LEVELING_3POINT
-//#define AUTO_BED_LEVELING_LINEAR
-//#define AUTO_BED_LEVELING_BILINEAR
-//#define AUTO_BED_LEVELING_UBL
-#define MESH_BED_LEVELING
+
+#if ENABLED(ABL)
+  #define AUTO_BED_LEVELING_3POINT
+#endif
+
+#if ENABLED(ABL_LINEAR)
+  #define AUTO_BED_LEVELING_LINEAR
+#endif
+
+#if ENABLED(ABL_BILINEAR)
+  #define AUTO_BED_LEVELING_BILINEAR
+#endif
+
+#if ENABLED(UBL)
+  #define AUTO_BED_LEVELING_UBL
+#endif
+
+#if ENABLED(MESH)
+  #define MESH_BED_LEVELING
+#endif
 
 /**
  * Normally G28 leaves leveling disabled on completion. Enable
  * this option to have G28 restore the prior leveling state.
  */
-//#define RESTORE_LEVELING_AFTER_G28
+#define RESTORE_LEVELING_AFTER_G28
 
 /**
  * Enable detailed logging of G28, G29, M48, etc.
@@ -1589,7 +1870,7 @@
  * Add a bed leveling sub-menu for ABL or MBL.
  * Include a guided procedure if manual probing is enabled.
  */
-#define LCD_BED_LEVELING
+//#define LCD_BED_LEVELING
 
 #if ENABLED(LCD_BED_LEVELING)
   #define MESH_EDIT_Z_STEP  0.025 // (mm) Step size while manually probing Z axis.
@@ -1633,16 +1914,30 @@
 // - Move the Z probe (or nozzle) to a defined XY point before Z Homing when homing all axes (G28).
 // - Prevent Z homing when the Z probe is outside bed area.
 //
-//#define Z_SAFE_HOMING
+#define Z_SAFE_HOMING
 
-#if ENABLED(Z_SAFE_HOMING)
+#if ANY(SAPPHIRE_PRO, SAPPHIRE_PLUS)
+  #define Z_SAFE_HOMING
   #define Z_SAFE_HOMING_X_POINT X_CENTER  // X point for Z homing when homing all axes (G28).
   #define Z_SAFE_HOMING_Y_POINT Y_CENTER  // Y point for Z homing when homing all axes (G28).
+ 
+#elif ENABLED(BLUER)
+  #define Z_SAFE_HOMING
+  #define Z_SAFE_HOMING_X_POINT ((X_BED_SIZE) / 2)  // X point for Z homing when homing all axes (G28).
+  #define Z_SAFE_HOMING_Y_POINT ((Y_BED_SIZE) / 2)  // Y point for Z homing when homing all axes (G28).
 #endif
 
 // Homing speeds (mm/m)
-#define HOMING_FEEDRATE_XY (50*60)
-#define HOMING_FEEDRATE_Z  (5*60)
+
+#if ANY(SAPPHIRE_PRO, SAPPHIRE_PLUS)
+  #define HOMING_FEEDRATE_XY (50*60)
+  #define HOMING_FEEDRATE_Z  (5*60)
+
+#elif ENABLED(BLUER)
+  #define HOMING_FEEDRATE_XY (20*60)
+  #define HOMING_FEEDRATE_Z  (4*60)
+
+#endif
 
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS
@@ -2374,7 +2669,7 @@
 //
 // FSMC display (MKS Robin, Alfawise U20, JGAurora A5S, REXYZ A1, etc.)
 //
-#if ANY(SAPPHIRE_PRO, SAPPHIRE_PLUS)
+#if ANY(SAPPHIRE_PRO, SAPPHIRE_PLUS, BLUER)
     //Sapphire Pro & Plus
     #define SAPPHIRE_GRAPHICAL_TFT
   #else
@@ -2391,7 +2686,7 @@
 //
 // ADS7843/XPT2046 ADC Touchscreen such as ILI9341 2.8
 //
-#if ANY(SAPPHIRE_PRO, SAPPHIRE_PLUS)
+#if ANY(SAPPHIRE_PRO, SAPPHIRE_PLUS, BLUER)
     //Sapphire Pro & Plus
     #define TOUCH_BUTTONS
     #if ENABLED(TOUCH_BUTTONS)
